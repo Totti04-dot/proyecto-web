@@ -1,12 +1,13 @@
 /* ============================================================
    Tareas · Organizador de Tareas — Lógica de la aplicación
-   Solo comportamiento. DOM + eventos + validación.
+   Solo comportamiento. DOM + eventos + validación + persistencia.
    ============================================================ */
 
 (() => {
   "use strict";
 
   /* ---------- Constantes ---------- */
+  const STORAGE_KEY = "tareas_organizador_v1";
   const URGENT_WINDOW_DAYS = 7; // Ventana máxima para tareas de prioridad Alta.
   // Permite letras (con tildes y ñ), números, espacios y signos básicos, entre 3 y 60 caracteres.
   const TITLE_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9.,\s]{3,60}$/;
@@ -39,9 +40,31 @@
   const summaryDone = document.getElementById("summaryDone");
   const summaryUrgent = document.getElementById("summaryUrgent");
 
-  /* ---------- Estado en memoria (persistencia se agrega en un paso posterior) ---------- */
-  let tasks = [];         // Lista de tareas, vive solo en memoria por ahora.
-  let editingId = null;   // ID de la tarea en edición (null = creando una nueva).
+  /* ---------- Estado en memoria ---------- */
+  let tasks = [];        // Lista de tareas cargada desde localStorage.
+  let editingId = null;  // ID de la tarea en edición (null = creando una nueva).
+
+  /* ============================================================
+     PERSISTENCIA (localStorage)
+     ============================================================ */
+
+  // Recupera y parsea de forma segura. Maneja el caso de primera carga (null).
+  function loadTasks() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return []; // localStorage vacío: no es un error, es la primera vez.
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+      // Si el contenido estuviera corrupto, evitamos romper la app.
+      console.warn("No se pudo leer el almacenamiento, se reinicia.", err);
+      return [];
+    }
+  }
+
+  function saveTasks() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  }
 
   /* ============================================================
      UTILIDADES
@@ -249,6 +272,7 @@
       tasks.push(data);
     }
 
+    saveTasks();
     render();
     form.reset();
     clearFieldStates();
@@ -280,6 +304,7 @@
 
     if (target.dataset.action === "toggle") {
       tasks = tasks.map((t) => (t.id === id ? { ...t, done: target.checked } : t));
+      saveTasks();
       render();
       return;
     }
@@ -289,6 +314,7 @@
 
     if (button.dataset.action === "delete") {
       tasks = tasks.filter((t) => t.id !== id);
+      saveTasks();
       card.remove(); // Destruye el elemento del DOM individualmente.
       if (tasks.length === 0) emptyState.hidden = false;
       updateSummary();
@@ -354,7 +380,8 @@
      ============================================================ */
 
   function init() {
-    render(); // Por ahora arranca siempre vacío (sin persistencia).
+    tasks = loadTasks();        // Carga inicial segura.
+    render();                   // Pinta lo que haya (o el estado vacío).
     updateCounter();
 
     // Registro de eventos con addEventListener (varios tipos distintos).
