@@ -11,25 +11,12 @@ fecha límite. Después puedes marcarla como completada, editarla o
 eliminarla. Arriba se ve un resumen con cuántas tareas tienes pendientes,
 completadas y urgentes.
 
-Elegí este tema porque es algo que todos usamos y es fácil pedirle varios
-datos al usuario sin que se vea forzado. Además, la prioridad y la fecha
-límite se relacionan de forma natural: si una tarea es de prioridad Alta, no
-tiene mucho sentido que venza en un mes, así que de ahí saqué la validación
-cruzada que pide la rúbrica.
 
 ## Cómo probarla
 
-No necesita instalar nada ni levantar servidor.
-
-1. Clona o descarga el repo.
+1. Clona o descarga el repositorio.
 2. Abre `index.html` en el navegador (doble clic, o "Abrir con" Chrome/Edge/Firefox).
 3. Listo, ya puedes agregar tareas.
-
-Si prefieres usar un servidor local (no es obligatorio):
-```bash
-python -m http.server 8000
-```
-y luego abres `http://localhost:8000`.
 
 **Cómo se usa:**
 - Llenas el formulario y le das a "Guardar tarea".
@@ -41,7 +28,6 @@ y luego abres `http://localhost:8000`.
 
 ## Estructura de carpetas
 
-```
 mi-proyecto/
 ├── index.html
 ├── css/
@@ -49,7 +35,7 @@ mi-proyecto/
 ├── js/
 │   └── script.js
 └── README.md
-```
+
 
 ## Checklist de lo pedido en la rúbrica
 
@@ -68,12 +54,12 @@ mi-proyecto/
 - [x] 4 campos: título, categoría, prioridad y fecha límite.
 - [x] 5 validaciones:
   1. Campos requeridos (que no estén vacíos).
-  2. El título solo acepta letras, números y signos básicos (regex).
+  2. El título solo acepta letras, números y signos básicos.
   3. El título debe tener entre 3 y 60 caracteres.
   4. Validación cruzada: si la prioridad es Alta, la fecha límite tiene que ser dentro de los próximos 7 días.
   5. La fecha límite no puede ser anterior a hoy.
-- [x] Cada error se muestra debajo de su campo (nada de `alert()`).
-- [x] Los campos cambian de color según estén bien o mal (`is-valid` / `is-invalid`).
+- [x] Cada error se muestra debajo de su campo.
+- [x] Los campos cambian de color según estén bien o mal.
 - [x] Uso `preventDefault()` para que el formulario no se envíe si hay errores.
 
 **Persistencia**
@@ -90,13 +76,21 @@ mi-proyecto/
 **Git y entrega**
 - [x] Repo en GitHub creado para este proyecto.
 - [x] Más de 4 commits, cada uno con un avance distinto.
-- [x] Este README con todo lo pedido.
+- [x] El README con todo lo pedido.
 
 ## Capturas
 
-(Acá van las capturas reales de la app funcionando: formulario con error,
-una tarea guardada, y la lista después de recargar la página para mostrar
-que la persistencia funciona.)
+
+![Estado vacío](./Capturas/Estado%20vacio.png)
+
+
+![Validación de errores](./Capturas/Validacion%20de%20errores.png)
+
+
+![Tarea guardada](./Capturas/Tarrea%20guardada.png)
+
+
+![Tarea completada](./Capturas/Tarrea%20completada.png)
 
 ## Preguntas de cierre
 
