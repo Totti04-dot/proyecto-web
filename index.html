@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tareas · Organizador de Tareas</title>
+
+  <!-- Tipografías cargadas por CDN (sin dependencias pesadas) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Única hoja de estilos: solo presentación -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <!-- ====== Encabezado ====== -->
+    <header class="hero">
+      <p class="hero__eyebrow">Organizador de tareas</p>
+      <h1 class="hero__title">Tareas</h1>
+      <p class="hero__subtitle">
+        Registra tus tareas con categoría, prioridad y fecha límite, y
+        marca tu avance a medida que las completas.
+      </p>
+
+      <!-- Resumen dinámico (se actualiza por JS) -->
+      <dl class="summary" aria-live="polite">
+        <div class="summary__item">
+          <dt class="summary__label">Pendientes</dt>
+          <dd class="summary__value" id="summaryPending">0</dd>
+        </div>
+        <div class="summary__item">
+          <dt class="summary__label">Completadas</dt>
+          <dd class="summary__value" id="summaryDone">0</dd>
+        </div>
+        <div class="summary__item">
+          <dt class="summary__label">Urgentes (Alta)</dt>
+          <dd class="summary__value" id="summaryUrgent">0</dd>
+        </div>
+      </dl>
+    </header>
+
+    <main class="content">
+      <!-- ====== Formulario ====== -->
+      <section class="panel" aria-labelledby="formTitle">
+        <h2 class="panel__title" id="formTitle">Nueva tarea</h2>
+
+        <!-- novalidate: desactiva la validación nativa para usar la propia (JS) -->
+        <form id="taskForm" class="form" novalidate>
+          <!-- Campo 1: título (texto) -->
+          <div class="field">
+            <label class="field__label" for="title">Título de la tarea</label>
+            <input
+              class="field__input"
+              type="text"
+              id="title"
+              name="title"
+              placeholder="Ej: Estudiar para el examen de Redes"
+              autocomplete="off"
+            />
+            <div class="field__meta">
+              <span class="field__error" id="error-title" role="alert"></span>
+              <span class="field__counter" id="counter-title">0/60</span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <!-- Campo 2: categoría (selección) -->
+            <div class="field">
+              <label class="field__label" for="category">Categoría</label>
+              <select class="field__input" id="category" name="category">
+                <option value="">Selecciona una categoría</option>
+                <option value="Estudio">Estudio</option>
+                <option value="Trabajo">Trabajo</option>
+                <option value="Personal">Personal</option>
+                <option value="Salud">Salud</option>
+                <option value="Otro">Otro</option>
+              </select>
+              <span class="field__error" id="error-category" role="alert"></span>
+            </div>
+
+            <!-- Campo 3: prioridad (selección) -->
+            <div class="field">
+              <label class="field__label" for="priority">Prioridad</label>
+              <select class="field__input" id="priority" name="priority">
+                <option value="">Selecciona una prioridad</option>
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+              </select>
+              <span class="field__error" id="error-priority" role="alert"></span>
+            </div>
+          </div>
+
+          <!-- Campo 4: fecha límite (fecha) -->
+          <div class="field">
+            <label class="field__label" for="deadline">Fecha límite</label>
+            <input class="field__input" type="date" id="deadline" name="deadline" />
+            <span class="field__error" id="error-deadline" role="alert"></span>
+            <p class="field__hint" id="hint-deadline"></p>
+          </div>
+
+          <div class="form__actions">
+            <button class="btn btn--primary" type="submit" id="submitBtn">
+              Guardar tarea
+            </button>
+            <button class="btn btn--ghost" type="button" id="cancelBtn" hidden>
+              Cancelar edición
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ====== Listado de tareas ====== -->
+      <section class="panel" aria-labelledby="listTitle">
+        <h2 class="panel__title" id="listTitle">Tus tareas</h2>
+
+        <!-- Estado vacío (visible cuando no hay datos guardados) -->
+        <p class="empty" id="emptyState">
+          Aún no tienes tareas. Crea la primera con el formulario.
+        </p>
+
+        <!-- Aquí se insertan las tarjetas generadas dinámicamente por JS -->
+        <ul class="task-list" id="taskList"></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Los datos se guardan en este navegador (localStorage).</p>
+    </footer>
+  </div>
+
+  <!-- Único archivo de comportamiento: solo JavaScript -->
+  <script src="js/script.js"></script>
+</body>
+</html>
